@@ -51,22 +51,12 @@ const MusicPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // created a new user message thta takes name user and value of the input field
-      const userMessage: OpenAI.ChatCompletionMessageParam = {
-        role: "user",
-        content: values.prompt,
-      };
-
-      // appended this user message to the new message array that contains all the old messages as well
-      const newMessages = [...messages, userMessage];
-
+      setMusic(undefined);
+     
       // making an api call with the message begin the new message array.
-      const response = await axios.post("/api/conversation", {
-        messages: newMessages,
-      });
-
-      setMessages((current) => [...current, userMessage, response.data]);
-
+      const response = await axios.post("/api/music", values);
+      setMusic(response.data.audio);
+      
       form.reset();
     } catch (error) {
       console.log(error);
@@ -135,12 +125,14 @@ const MusicPage = () => {
               <Loader />
             </div>
           )}
-          {messages.length === 0 && !isLoading && (
+          {!music && !isLoading && (
             <Empty label="No Music Generated" />
           )}
-          <div>
-            Music will be generated. 
-          </div>
+          {music && (
+            <audio controls className="w-full mt-8">
+              <source src={music}/>
+            </audio>
+          )}
         </div>
       </div>
     </div>
