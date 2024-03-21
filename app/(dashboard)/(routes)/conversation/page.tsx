@@ -7,6 +7,7 @@ import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { cn } from "@/lib/utils";
 
 import { formSchema } from "./constants";
 import {
@@ -24,14 +25,18 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 // import { ChatCompletionMessageParam } from "openai/resources/chat";
-import type {OpenAI} from "openai";
+import type { OpenAI } from "openai";
 import Empty from "@/components/empty";
 import Loader from "@/components/loader";
+import UserAvatar from "@/components/user-avatar";
+import BotAvatar from "@/components/bot-avatar";
+
 const ConversationPage = () => {
+  const router = useRouter();
 
-    const router = useRouter();
-
-    const [messages, setMessages] = useState<OpenAI.ChatCompletionMessageParam[]>([]);
+  const [messages, setMessages] = useState<OpenAI.ChatCompletionMessageParam[]>(
+    []
+  );
 
   // form schema's kept in constants file.
 
@@ -48,28 +53,27 @@ const ConversationPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-        // created a new user message thta takes name user and value of the input field
-        const userMessage: OpenAI.ChatCompletionMessageParam = {
-            role: "user",
-            content: values.prompt
-        };
+      // created a new user message thta takes name user and value of the input field
+      const userMessage: OpenAI.ChatCompletionMessageParam = {
+        role: "user",
+        content: values.prompt,
+      };
 
-        // appended this user message to the new message array that contains all the old messages as well
-        const newMessages = [...messages, userMessage];
+      // appended this user message to the new message array that contains all the old messages as well
+      const newMessages = [...messages, userMessage];
 
-        // making an api call with the message begin the new message array. 
-        const response = await axios.post("/api/conversation", {
-            messages: newMessages
-        });
+      // making an api call with the message begin the new message array.
+      const response = await axios.post("/api/conversation", {
+        messages: newMessages,
+      });
 
-        setMessages((current) => [...current, userMessage, response.data]);
+      setMessages((current) => [...current, userMessage, response.data]);
 
-        form.reset();
-
+      form.reset();
     } catch (error) {
-        console.log(error);
+      console.log(error);
     } finally {
-        router.refresh(); 
+      router.refresh();
     }
   };
 
@@ -118,28 +122,40 @@ const ConversationPage = () => {
                   </FormItem>
                 )}
               />
-              <Button className="col-span-12 lg:col-span-2 w-full" disabled={isLoading}>
+              <Button
+                className="col-span-12 lg:col-span-2 w-full"
+                disabled={isLoading}
+              >
                 Generate
               </Button>
             </form>
           </Form>
         </div>
         <div className="space-y-4 m-4">
-            {isLoading && (
-                <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
-                    <Loader />
-                </div>
-            )}
-            {messages.length === 0 && !isLoading && (
-                <Empty label="No Conversation Started" />
-            )}
-               <div className="flex flex-col-reverse gap-y-4">
-                    {messages.map((message) => (
-                        <div key={message.content}>
-                            {message.content}
-                        </div>
-                    ))}
-               </div>
+          {isLoading && (
+            <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+              <Loader />
+            </div>
+          )}
+          {messages.length === 0 && !isLoading && (
+            <Empty label="No Conversation Started" />
+          )}
+          <div className="flex flex-col-reverse gap-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.content}
+                className={cn(
+                  "p-8 w-full rounded-lg flex items-start gap-x-8",
+                  message.role === "user"
+                    ? "bg-white border border-black/10"
+                    : "bg-muted"
+                )}
+              >
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                <p className="text-sm">{message.content}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
