@@ -141,9 +141,9 @@ const ConversationPage = () => {
             <Empty label="No Conversation Started" />
           )}
           <div className="flex flex-col-reverse gap-y-4">
-            {messages.map((message) => (
+            {messages.map((message: OpenAI.ChatCompletionMessageParam) => (
               <div
-                key={message.content}
+                key={message.content as string}
                 className={cn(
                   "p-8 w-full rounded-lg flex items-start gap-x-8",
                   message.role === "user"
@@ -152,7 +152,7 @@ const ConversationPage = () => {
                 )}
               >
                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                <p className="text-sm">{message.content}</p>
+                <p className="text-sm">{message.content as string}</p>
               </div>
             ))}
           </div>

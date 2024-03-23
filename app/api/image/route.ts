@@ -2,6 +2,9 @@ import { auth } from "@clerk/nextjs";
 
 import OpenAI from "openai";
 
+// api liimt imports 
+import { increaseApiLimit, checkApiLimit } from "@/lib/api-limit";
+
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
@@ -35,12 +38,19 @@ export async function POST(req: Request){
         
         }
 
+        const freeTrial = await checkApiLimit();
+        if(!freeTrial){
+            return new Response(JSON.stringify("Api limit exceeded"), {status: 403});
+        }
+
         const response = await openai.images.generate({
             model: "dall-e-2",
             prompt, 
             n: parseInt(amount, 10),
             size: resolution,
         })
+
+        await increaseApiLimit();
 
         return new Response(JSON.stringify(response.data), {status: 200});
 
