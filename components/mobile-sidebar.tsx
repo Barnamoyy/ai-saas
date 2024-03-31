@@ -6,12 +6,8 @@ import { Menu } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Sidebar from "./sidebar";
-import { getApiLimitCount } from "@/lib/api-limit";
 
-const MobileSidebar = async () => {
-
-  // running the api limit count in server component 
-  const apiLimitCount = await getApiLimitCount();
+const MobileSidebar = ({apiLimitCount = 0}:{apiLimitCount: number}) => {
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -31,7 +27,7 @@ const MobileSidebar = async () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
-        <Sidebar apiLimitCount={apiLimitCount} />
+        <Sidebar apiLimitCount={apiLimitCount}/>
       </SheetContent>
     </Sheet>
   );
