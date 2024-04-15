@@ -30,8 +30,12 @@ import Empty from "@/components/empty";
 import Loader from "@/components/loader";
 import UserAvatar from "@/components/user-avatar";
 import BotAvatar from "@/components/bot-avatar";
+import { useProModalStore } from "@/hooks/use-pro-modal";
 
 const VideoPage = () => {
+
+  const proModal = useProModalStore();
+
   const router = useRouter();
 
   const [video, setVideos] = useState<string>();
@@ -59,6 +63,8 @@ const VideoPage = () => {
 
       form.reset();
     } catch (error) {
+
+      proModal.openModal();
       console.log(error);
     } finally {
       router.refresh();
