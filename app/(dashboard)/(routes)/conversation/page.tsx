@@ -30,8 +30,12 @@ import Empty from "@/components/empty";
 import Loader from "@/components/loader";
 import UserAvatar from "@/components/user-avatar";
 import BotAvatar from "@/components/bot-avatar";
+import { useProModalStore } from "@/hooks/use-pro-modal";
 
 const ConversationPage = () => {
+
+  const proModal = useProModalStore(); 
+
   const router = useRouter();
 
   const [messages, setMessages] = useState<OpenAI.ChatCompletionMessageParam[]>(
@@ -71,6 +75,7 @@ const ConversationPage = () => {
 
       form.reset();
     } catch (error) {
+      proModal.openModal();
       console.log(error);
     } finally {
       router.refresh();

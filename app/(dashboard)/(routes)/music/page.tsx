@@ -28,9 +28,13 @@ import { useState } from "react";
 import type { OpenAI } from "openai";
 import Empty from "@/components/empty";
 import Loader from "@/components/loader";
+import { useProModalStore } from "@/hooks/use-pro-modal";
 
 
 const MusicPage = () => {
+
+  const proModal = useProModalStore();
+
   const router = useRouter();
 
   const [music, setMusic] = useState<string>(
@@ -59,6 +63,7 @@ const MusicPage = () => {
       
       form.reset();
     } catch (error) {
+      proModal.openModal();
       console.log(error);
     } finally {
       router.refresh();
