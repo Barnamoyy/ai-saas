@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import axios from "axios";
+
 // shadcn dialog
 import {
   Dialog,
@@ -13,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card } from "./ui/card";
 
+// modals 
 import { useProModalStore } from "@/hooks/use-pro-modal";
 
 // icons 
@@ -61,6 +65,20 @@ const tools = [
 const ProModal = () => {
   const proModal = useProModalStore();
 
+   const [loading, setLoading] = useState(false);
+
+  const onSubscribe = async () => {
+    try {
+      setLoading(true); 
+      const response = await axios.get('/api/stripe')
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error(error, "STRIPE_CLIENT_ERROR"); 
+    } finally{
+      setLoading(false);
+    }
+  }
+
   return (
     <div>
       <Dialog open={proModal.isOpen} onOpenChange={proModal.closeModal}>
@@ -93,6 +111,7 @@ const ProModal = () => {
           </DialogHeader>
           <DialogFooter>
             <Button
+                onClick={onSubscribe}
                 size={'lg'}
                 variant='gradient'
                 className="w-full"
