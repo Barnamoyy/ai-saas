@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Sidebar from "./sidebar";
 
-const MobileSidebar = ({apiLimitCount = 0}:{apiLimitCount: number}) => {
+const MobileSidebar = ({apiLimitCount = 0, isPro = false}:{apiLimitCount: number, isPro: boolean}) => {
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -27,7 +27,7 @@ const MobileSidebar = ({apiLimitCount = 0}:{apiLimitCount: number}) => {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
-        <Sidebar apiLimitCount={apiLimitCount}/>
+        <Sidebar apiLimitCount={apiLimitCount} isPro={isPro}/>
       </SheetContent>
     </Sheet>
   );

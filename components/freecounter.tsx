@@ -10,9 +10,10 @@ import { useProModalStore } from "@/hooks/use-pro-modal";
 
 interface counterProps {
   apiLimitCounter: number;
+  isPro: boolean; 
 }
 
-const FreeCounter = ({ apiLimitCounter = 0 }: counterProps) => {
+const FreeCounter = ({ apiLimitCounter = 0, isPro = false }: counterProps) => {
   const proModel = useProModalStore();
   const [mounted, setMounted] = useState(false);
 
@@ -22,6 +23,11 @@ const FreeCounter = ({ apiLimitCounter = 0 }: counterProps) => {
 
   if (!mounted) {
     return null;
+  }
+
+  // if user has pro subscription do no render this. 
+  if(isPro){
+    return null; 
   }
 
   return (
