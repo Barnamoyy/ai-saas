@@ -3,6 +3,7 @@
 import * as z from "zod";
 import Heading from "@/components/heading";
 import { MessageSquare, Music } from "lucide-react";
+import {toast} from "react-hot-toast"; 
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -62,8 +63,13 @@ const MusicPage = () => {
       setMusic(response.data.audio);
       
       form.reset();
-    } catch (error) {
-      proModal.openModal();
+    } catch (error:any) {
+      if(error?.response?.status === 403){
+        proModal.openModal();
+      }
+      else {
+        toast.error("Something went wrong.");
+      }
       console.log(error);
     } finally {
       router.refresh();

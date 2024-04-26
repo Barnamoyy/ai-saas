@@ -3,6 +3,7 @@
 import * as z from "zod";
 import Heading from "@/components/heading";
 import { Code, MessageSquare } from "lucide-react";
+import {toast} from "react-hot-toast";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,8 +76,13 @@ const CodePage = () => {
       setMessages((current) => [...current, userMessage, response.data]);
 
       form.reset();
-    } catch (error) {
-      proModal.openModal();
+    } catch (error:any) {
+      if(error?.response?.status === 403){
+        proModal.openModal();
+      }
+      else {
+        toast.error("Something went wrong.");
+      }
       console.log(error);
     } finally {
       router.refresh();
