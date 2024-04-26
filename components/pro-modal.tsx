@@ -82,7 +82,6 @@ const ProModal = () => {
   return (
     <div>
       <Dialog open={proModal.isOpen} onOpenChange={proModal.closeModal}>
-        <DialogTrigger>Open</DialogTrigger>
         <DialogContent>
           <DialogHeader>
               <DialogTitle className="flex justify-center items-center flex-col gap-y-4 pb-2">
