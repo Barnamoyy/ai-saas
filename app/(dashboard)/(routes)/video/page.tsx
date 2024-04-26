@@ -3,6 +3,7 @@
 import * as z from "zod";
 import Heading from "@/components/heading";
 import { MessageSquare, VideoIcon } from "lucide-react";
+import {toast} from "react-hot-toast"; 
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -62,9 +63,13 @@ const VideoPage = () => {
       setVideos(response.data[0]);
 
       form.reset();
-    } catch (error) {
-
-      proModal.openModal();
+    } catch (error:any) {
+      if(error?.reponse?.status === 403){
+        proModal.openModal();
+      }
+      else {
+        toast.error("Something went wrong.");
+      }
       console.log(error);
     } finally {
       router.refresh();

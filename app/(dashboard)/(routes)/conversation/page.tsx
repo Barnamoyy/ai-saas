@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { cn } from "@/lib/utils";
+import {toast} from "react-hot-toast"; 
 
 import { formSchema } from "./constants";
 import {
@@ -74,8 +75,13 @@ const ConversationPage = () => {
       setMessages((current) => [...current, userMessage, response.data]);
 
       form.reset();
-    } catch (error) {
-      proModal.openModal();
+    } catch (error: any) {
+      if(error?.response?.status === 403){
+        proModal.openModal();
+      }
+      else {
+        toast.error("Something went wrong."); 
+      }
       console.log(error);
     } finally {
       router.refresh();
